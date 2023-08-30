@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db.models import Prefetch, Subquery, OuterRef
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -9,9 +10,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 
-
-from .models import Booking
-from .serializers import BookingSerializer
+from schedule.models import Schedule
+from .models import Booking, BookingItem
+from .serializers import BookingSerializer, BookingItemSerializer
 from .decorators import validate_booking_data
 
 
@@ -94,6 +95,56 @@ class BookingDetailView(generics.RetrieveUpdateDestroyAPIView):
                     "message": "Booking with id: {} does not exist".format(kwargs["pk"])
                 },
                 status=status.HTTP_404_NOT_FOUND
+            )
+        
+        
+class ConfirmOrderView(generics.ListCreateAPIView):
+    """
+    GET Chats/
+    POST Chats/
+    """
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    @validate_booking_data
+    def post(self, request, *args, **kwargs):
+        bookings = request.data["bookings"]
+        user = User.objects.get(id=request.data["user"])
+
+
+        ticket_owner_details = request.data["ticket_owner_details"]
+        if len(bookings):
+            my_booking = Booking.objects.create(
+                user=user,
+                # order_date=request.data["order_date"],
+                paid='Not Paid',
+                name=ticket_owner_details["name"],
+                county=ticket_owner_details["county"],
+                city=ticket_owner_details["city"],
+                phone=ticket_owner_details["phone"]
+            )
+
+            booking_items = [BookingItem.objects.create(
+                schedule=Schedule.objects.get(id=bk['id']),
+                booking=my_booking,
+                seats=bk["qty"],
+                price=bk["price"]
+            ) for bk in bookings]
+
+
+            return Response(
+                data={'booking': BookingSerializer(my_booking).data,
+                      'booking_items':
+                          BookingItemSerializer(booking_items, many=True).data,
+                      },
+                    status=status.HTTP_201_CREATED
+                )
+
+        else:
+            return Response(
+                data={},
+                status=status.HTTP_204_NO_CONTENT
             )
         
         
