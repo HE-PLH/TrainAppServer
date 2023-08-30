@@ -117,7 +117,7 @@ class ConfirmOrderView(generics.ListCreateAPIView):
         if len(bookings):
             my_booking = Booking.objects.create(
                 user=user,
-                # order_date=request.data["order_date"],
+                # booking_date=request.data["booking_date"],
                 paid='Not Paid',
                 name=ticket_owner_details["name"],
                 county=ticket_owner_details["county"],
@@ -146,6 +146,39 @@ class ConfirmOrderView(generics.ListCreateAPIView):
                 data={},
                 status=status.HTTP_204_NO_CONTENT
             )
-        
-        
-    
+
+class getUserBookings(generics.ListCreateAPIView):
+        """
+        GET Chats/
+        POST Chats/
+        """
+        queryset = Booking.objects.all()
+        serializer_class = BookingSerializer
+        permission_classes = (permissions.IsAuthenticated,)
+
+        @validate_booking_data
+        def post(self, request, *args, **kwargs):
+            user = User.objects.get(id=request.data['user'])
+            print(user)
+            print(self.queryset)
+            my_bookings = self.queryset.filter(user=user)
+            temp = {}
+            for i in my_bookings:
+                _id = i.id
+                print(_id)
+                _tmp = BookingItemSerializer(BookingItem.objects.filter(booking=i), many=True).data
+                _item = [{
+                    'booking_obj': BookingSerializer(Booking.objects.get(id=tmp["booking"])).data,
+                    **tmp
+                } for tmp in _tmp]
+                if f"{_id}" in temp:
+                    temp[f"{_id}"]['data'].append(_item)
+                else:
+                    temp[f"{_id}"] = {'data': [], 'booking': {}}
+                    temp[f"{_id}"]['data'].append(_item)
+                    temp[f"{_id}"]['booking'] = BookingSerializer(i).data
+
+            return Response(
+                data=temp,
+                status=status.HTTP_201_CREATED
+            )
