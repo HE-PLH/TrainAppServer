@@ -43,3 +43,17 @@ class Station(models.Model):
         return "{}".format(self.name)
 
 
+
+class TrainClass(models.Model):
+    # Station
+    name = models.CharField(max_length=255, null=False)
+    price = models.IntegerField(null=False)
+    date = models.DateTimeField(auto_now_add=True)
+    images = models.ImageField(upload_to=upload_to_images, blank=True)
+
+
+
+    def __str__(self):
+        return "{} - {}".format(self.name, self.price)
+
+
