@@ -28,6 +28,7 @@ urlpatterns = [
     re_path('api/(?P<version>(v1|v2))/', include('resource.urls')),
     re_path('api/(?P<version>(v1|v2))/', include('booking.urls')),
     re_path('api/(?P<version>(v1|v2))/', include('schedule.urls')),
+    re_path('api/(?P<version>(v1|v2))/', include('tutorials.urls')),
     re_path('api/(?P<version>(v1|v2))/', include('mpesa.urls'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'authentication.apps.AuthenticationConfig',
     'resource.apps.ResourceConfig',
+    'tutorials.apps.TutorialsConfig',
     'schedule.apps.ScheduleConfig',
     'booking.apps.BookingConfig',
     'mpesa.apps.MpesaConfig',
