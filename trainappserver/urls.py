@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls.static import static
+from mpesa.urls import mpesa_urls
+
 
 from django.contrib import admin
 from django.urls import path, include, re_path
@@ -23,12 +25,13 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('mpesa/', include(mpesa_urls)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     re_path('api/(?P<version>(v1|v2))/', include('authentication.urls')),
     re_path('api/(?P<version>(v1|v2))/', include('resource.urls')),
     re_path('api/(?P<version>(v1|v2))/', include('booking.urls')),
     re_path('api/(?P<version>(v1|v2))/', include('schedule.urls')),
     re_path('api/(?P<version>(v1|v2))/', include('tutorials.urls')),
-    re_path('api/(?P<version>(v1|v2))/', include('mpesa.urls'))
+    # re_path('api/(?P<version>(v1|v2))/', include('mpesa.urls'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
