@@ -22,7 +22,7 @@ class Booking(models.Model):
 
 
     def __str__(self):
-        return "{} -{} - ({})".format(self.id, self.name, self.phone)
+        return "{} -{} -{}-({})".format(self.id, self.name, self.phone, self.paid)
 
 
 class BookingItem(models.Model):
@@ -36,6 +36,6 @@ class BookingItem(models.Model):
 
 
     def __str__(self):
-        return "{} - ({}), {}".format(self.schedule, self.seats)
+        return "{} - ({}), {}".format(self.schedule, self.seats,self.price)
 
 
