@@ -78,7 +78,7 @@ MIDDLEWARE = [
 MPESA_CONFIG = {
 'CONSUMER_KEY': 'WUXzACOooTl88ulz8KcehEHP7RvG2lV7',
 'CONSUMER_SECRET': 'zA5xvtAZKNiXDhJ6',
-'HOST_NAME': 'https://nalaiappserver-production.up.railway.app/',
+'HOST_NAME': 'https://trainappserver-production.up.railway.app/',
 'PASS_KEY': 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919',
 'SAFARICOM_API': 'https://sandbox.safaricom.co.ke',
 'SHORT_CODE': '174379'
